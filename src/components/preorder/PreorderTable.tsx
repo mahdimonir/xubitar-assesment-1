@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { deleteMultiplePreordersAction, deletePreorderAction, togglePreorderStatusAction } from "@/actions/preorder";
+import { AlertCircle, Calendar, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Pencil, Trash2, Calendar, AlertCircle } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { togglePreorderStatusAction, deletePreorderAction, deleteMultiplePreordersAction } from "@/actions/preorder";
 
 interface Preorder {
   id: string;
@@ -87,7 +87,6 @@ export function PreorderTable({ preorders }: PreorderTableProps) {
 
   return (
     <div className="w-full">
-      {/* Mobile View */}
       <div className="md:hidden">
         {preorders.length > 0 && (
           <div className="p-4 px-5 border-b border-gray-100 bg-gray-50/30 flex items-center justify-between">
@@ -218,7 +217,6 @@ export function PreorderTable({ preorders }: PreorderTableProps) {
         )}
       </div>
 
-      {/* Desktop View */}
       <div className="hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
