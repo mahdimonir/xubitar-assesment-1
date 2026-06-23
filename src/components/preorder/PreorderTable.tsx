@@ -87,7 +87,135 @@ export function PreorderTable({ preorders }: PreorderTableProps) {
 
   return (
     <div className="w-full">
-      <div className="overflow-x-auto">
+      {preorders.length > 0 && (
+        <div className="md:hidden p-4 px-5 border-b border-gray-100 bg-gray-50/30 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={allSelected}
+              onChange={(e) => handleSelectAll(e.target.checked)}
+              className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black cursor-pointer accent-black"
+            />
+            <span className="text-sm font-semibold text-gray-500">
+              {selectedIds.length > 0 ? `${selectedIds.length} selected` : "Select All"}
+            </span>
+          </div>
+          {selectedIds.length > 0 && (
+            <button
+              onClick={() => setDeleteConfirmIds(selectedIds)}
+              className="inline-flex items-center px-3 py-1.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100 cursor-pointer shadow-sm select-none"
+            >
+              <Trash2 className="w-3.5 h-3.5 mr-1" />
+              Delete Selected
+            </button>
+          )}
+        </div>
+      )}
+
+      {preorders.length === 0 ? (
+        <div className="md:hidden p-8 text-center">
+          <div className="flex flex-col items-center justify-center space-y-3 py-10">
+            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-base font-semibold text-gray-900">No preorders found</p>
+              <p className="text-sm text-gray-500">Get started by creating your first preorder.</p>
+            </div>
+            <button
+              onClick={() => router.push("/preorder/create")}
+              className="mt-2 inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-black text-white hover:bg-gray-800 transition-colors shadow-sm"
+            >
+              Create Preorder
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="md:hidden divide-y divide-gray-100">
+          {preorders.map((preorder) => {
+            const isSelected = selectedIds.includes(preorder.id);
+            const isActive = activeActions[preorder.id] !== undefined
+              ? activeActions[preorder.id]
+              : preorder.active;
+
+            return (
+              <div key={preorder.id} className="p-5 flex flex-col space-y-3 bg-white hover:bg-gray-50/30 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3 min-w-0 flex-1">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={(e) => handleSelectRow(preorder.id, e.target.checked)}
+                      className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black cursor-pointer accent-black flex-shrink-0"
+                    />
+                    <span className="font-bold text-gray-900 truncate text-base tracking-tight">
+                      {preorder.name}
+                    </span>
+                  </div>
+                  <div className="flex items-center flex-shrink-0 ml-4">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleStatus(preorder.id, isActive)}
+                      className={`w-9 h-5 rounded-md transition-colors relative outline-none cursor-pointer flex-shrink-0 ${
+                        isActive ? "bg-black" : "bg-gray-200"
+                      }`}
+                      aria-label="Toggle preorder status"
+                    >
+                      <span
+                        className={`absolute top-[2px] w-4 h-4 bg-white rounded-sm transition-all shadow-sm ${
+                          isActive ? "left-[18px]" : "left-[2px]"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pl-7 flex flex-wrap gap-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-gray-100 text-gray-700">
+                    {preorder.products} {preorder.products === 1 ? "product" : "products"}
+                  </span>
+                  <span
+                    className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold ${
+                      preorder.preorderWhen === "out-of-stock"
+                        ? "bg-amber-50 text-amber-700 border border-amber-100"
+                        : "bg-blue-50 text-blue-700 border border-blue-100"
+                    }`}
+                  >
+                    {preorder.preorderWhen}
+                  </span>
+                </div>
+
+                <div className="pl-7 pt-1.5 flex items-center justify-between text-xs text-gray-500 border-t border-gray-50">
+                  <div className="flex items-center space-x-1.5 text-gray-500 font-medium truncate flex-1 mr-4">
+                    <Calendar className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                    <span className="truncate">
+                      {preorder.startsAt} {preorder.endsAt ? `→ ${preorder.endsAt}` : ""}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2 flex-shrink-0">
+                    <button
+                      onClick={() => router.push(`/preorder/${preorder.id}`)}
+                      className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-colors cursor-pointer bg-white"
+                      title="Edit Preorder"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setDeleteConfirmIds([preorder.id])}
+                      className="p-2 border border-gray-200 rounded-lg hover:bg-red-50 text-gray-600 hover:text-red-600 hover:border-red-100 transition-colors cursor-pointer bg-white"
+                      title="Delete Preorder"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             {selectedIds.length > 0 ? (
@@ -188,14 +316,14 @@ export function PreorderTable({ preorders }: PreorderTableProps) {
                         <button
                           type="button"
                           onClick={() => handleToggleStatus(preorder.id, isActive)}
-                          className={`w-9 h-5 rounded-md p-0.5 transition-colors relative outline-none cursor-pointer ${
+                          className={`w-9 h-5 rounded-md transition-colors relative outline-none cursor-pointer flex-shrink-0 ${
                             isActive ? "bg-black" : "bg-gray-200"
                           }`}
                           aria-label="Toggle preorder status"
                         >
                           <span
-                            className={`block w-4 h-4 bg-white rounded-sm transition-transform shadow-sm ${
-                              isActive ? "translate-x-4" : "translate-x-0"
+                            className={`absolute top-[2px] w-4 h-4 bg-white rounded-sm transition-all shadow-sm ${
+                              isActive ? "left-[18px]" : "left-[2px]"
                             }`}
                           />
                         </button>
