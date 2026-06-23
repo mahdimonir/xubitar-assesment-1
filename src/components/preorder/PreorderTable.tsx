@@ -188,13 +188,13 @@ export function PreorderTable({ preorders }: PreorderTableProps) {
                         <button
                           type="button"
                           onClick={() => handleToggleStatus(preorder.id, isActive)}
-                          className={`w-9 h-5 rounded-full p-0.5 transition-colors relative outline-none cursor-pointer ${
+                          className={`w-9 h-5 rounded-md p-0.5 transition-colors relative outline-none cursor-pointer ${
                             isActive ? "bg-black" : "bg-gray-200"
                           }`}
                           aria-label="Toggle preorder status"
                         >
                           <span
-                            className={`block w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${
+                            className={`block w-4 h-4 bg-white rounded-sm transition-transform shadow-sm ${
                               isActive ? "translate-x-4" : "translate-x-0"
                             }`}
                           />

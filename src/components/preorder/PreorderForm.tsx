@@ -236,12 +236,12 @@ export function PreorderForm({ mode, id, initialData }: PreorderFormProps) {
               <button
                 type="button"
                 onClick={() => setValue("active", !activeValue)}
-                className={`w-9 h-5 rounded-full p-0.5 transition-colors relative outline-none ${
+                className={`w-9 h-5 rounded-md p-0.5 transition-colors relative outline-none ${
                   activeValue ? "bg-black" : "bg-gray-200"
                 }`}
               >
                 <span
-                  className={`block w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${
+                  className={`block w-4 h-4 bg-white rounded-sm transition-transform shadow-sm ${
                     activeValue ? "translate-x-4" : "translate-x-0"
                   }`}
                 />
