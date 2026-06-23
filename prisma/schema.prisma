@@ -1,0 +1,25 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Preorder {
+  id           String    @id @default(cuid())
+  name         String
+  products     Int       @default(1)
+  preorderWhen String
+  startsAt     DateTime
+  endsAt       DateTime?
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([active, createdAt])
+  @@index([name])
+  @@index([startsAt])
+  @@index([endsAt])
+}
