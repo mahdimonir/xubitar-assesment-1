@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { ZodError } from "zod";
 import { prisma } from "@/lib/prisma";
 import { preorderFormSchema, PreorderFormValues } from "@/lib/validations";
+import { formatDatabaseError } from "@/lib/errors";
 
 export async function createPreorderAction(data: PreorderFormValues) {
   try {
@@ -28,7 +29,7 @@ export async function createPreorderAction(data: PreorderFormValues) {
       const message = error.errors.map((err) => err.message).join(", ");
       return { success: false, error: message };
     }
-    const message = error instanceof Error ? error.message : "Failed to create preorder";
+    const message = formatDatabaseError(error, "Failed to create preorder.");
     return { success: false, error: message };
   }
 }
@@ -58,7 +59,7 @@ export async function updatePreorderAction(id: string, data: PreorderFormValues)
       const message = error.errors.map((err) => err.message).join(", ");
       return { success: false, error: message };
     }
-    const message = error instanceof Error ? error.message : "Failed to update preorder";
+    const message = formatDatabaseError(error, "Failed to update preorder.");
     return { success: false, error: message };
   }
 }
@@ -74,7 +75,7 @@ export async function togglePreorderStatusAction(id: string, active: boolean) {
     return { success: true };
   } catch (error: unknown) {
     console.error("Failed to toggle preorder status:", error);
-    const message = error instanceof Error ? error.message : "Failed to toggle status";
+    const message = formatDatabaseError(error, "Failed to update status.");
     return { success: false, error: message };
   }
 }
@@ -89,7 +90,7 @@ export async function deletePreorderAction(id: string) {
     return { success: true };
   } catch (error: unknown) {
     console.error("Failed to delete preorder:", error);
-    const message = error instanceof Error ? error.message : "Failed to delete preorder";
+    const message = formatDatabaseError(error, "Failed to delete preorder.");
     return { success: false, error: message };
   }
 }

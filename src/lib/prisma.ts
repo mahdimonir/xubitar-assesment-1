@@ -17,10 +17,13 @@ if (process.env.VERCEL) {
         fs.mkdirSync(dir, { recursive: true });
       }
       fs.copyFileSync(dbPath, tempDbPath);
+      fs.chmodSync(tempDbPath, 0o666);
     } catch (error) {
       console.error("Failed to copy database to /tmp:", error);
     }
   }
+
+  process.env.DATABASE_URL = `file:${tempDbPath}`;
 }
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient();
