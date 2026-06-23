@@ -94,3 +94,18 @@ export async function deletePreorderAction(id: string) {
     return { success: false, error: message };
   }
 }
+
+export async function deleteMultiplePreordersAction(ids: string[]) {
+  try {
+    await prisma.preorder.deleteMany({
+      where: { id: { in: ids } },
+    });
+
+    revalidatePath("/");
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Failed to delete multiple preorders:", error);
+    const message = formatDatabaseError(error, "Failed to delete selected preorders.");
+    return { success: false, error: message };
+  }
+}
